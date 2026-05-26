@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TradeAura - Advanced Backtesting Trading Platform</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      color: #333;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    /* Navigation */
+    nav {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 1rem 2rem;
+      border-radius: 10px;
+      margin-bottom: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .nav-brand {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #667eea;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: #333;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: #667eea;
+    }
+
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.3s;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-secondary {
+      background: #f0f0f0;
+      color: #333;
+    }
+
+    .btn-secondary:hover {
+      background: #e0e0e0;
+    }
+
+    /* Hero Section */
+    .hero {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 4rem 2rem;
+      border-radius: 10px;
+      text-align: center;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      color: #666;
+      margin-bottom: 2rem;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+    }
+
+    /* Main Content */
+    .main-content {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .card {
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .card h2 {
+      color: #667eea;
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: #333;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    /* Pricing */
+    .pricing-section {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .pricing-card {
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s;
+    }
+
+    .pricing-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .pricing-card.pro {
+      border: 3px solid #667eea;
+      transform: scale(1.05);
+    }
+
+    .pricing-card h3 {
+      color: #667eea;
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+    }
+
+    .price {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 0.5rem;
+    }
+
+    .price span {
+      font-size: 1rem;
+      color: #999;
+    }
+
+    .features {
+      text-align: left;
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+
+    .features li {
+      list-style: none;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .features li:before {
+      content: "✓ ";
+      color: #667eea;
+      font-weight: bold;
+    }
+
+    /* Results Table */
+    .results-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+
+    .results-table thead {
+      background: #f0f0f0;
+    }
+
+    .results-table th, .results-table td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .results-table tr:hover {
+      background: #f9f9f9;
+    }
+
+    .positive {
+      color: #10b981;
+      font-weight: bold;
+    }
+
+    .negative {
+      color: #ef4444;
+      font-weight: bold;
+    }
+
+    /* Charts */
+    #chart {
+      width: 100%;
+      height: 400px;
+      background: #f9f9f9;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #999;
+      margin-top: 1rem;
+    }
+
+    .status-message {
+      padding: 1rem;
+      border-radius: 5px;
+      margin-bottom: 1rem;
+      display: none;
+    }
+
+    .status-message.success {
+      background: #d1fae5;
+      color: #065f46;
+      display: block;
+    }
+
+    .status-message.error {
+      background: #fee2e2;
+      color: #991b1b;
+      display: block;
+    }
+
+    /* Footer */
+    footer {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 2rem;
+      text-align: center;
+      border-radius: 10px;
+      color: #666;
+    }
+
+    @media (max-width: 768px) {
+      .main-content {
+        grid-template-columns: 1fr;
+      }
+
+      .pricing-section {
+        grid-template-columns: 1fr;
+      }
+
+      .pricing-card.pro {
+        transform: scale(1);
+      }
+
+      .hero h1 {
+        font-size: 2rem;
+      }
+
+      .nav-links {
+        gap: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Navigation -->
+    <nav>
+      <div class="nav-brand">🚀 TradeAura</div>
+      <div class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#pricing">Pricing</a>
+        <button class="btn btn-secondary" onclick="toggleAuth('login')">Login</button>
+        <button class="btn btn-primary" onclick="toggleAuth('register')">Sign Up</button>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="hero">
+      <h1>Welcome to TradeAura</h1>
+      <p>Advanced Backtesting Platform for Forex & Cryptocurrency</p>
+      <div class="cta-buttons">
+        <button class="btn btn-primary" onclick="toggleAuth('register')">Get Started Free</button>
+        <button class="btn btn-secondary" onclick="scrollTo('features')">Learn More</button>
+      </div>
+    </div>
+
+    <!-- Auth Section -->
+    <div id="auth-section" style="display: none;">
+      <div class="card" style="max-width: 500px; margin: 0 auto 2rem;">
+        <h2 id="auth-title">Login to TradeAura</h2>
+        <div class="status-message" id="auth-message"></div>
+        <form onsubmit="handleAuth(event)">
+          <div id="username-field" class="form-group" style="display: none;">
+            <label>Username</label>
+            <input type="text" id="username" placeholder="Enter your username" required>
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="email" placeholder="Enter your email" required>
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="password" placeholder="Enter your password" required>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width: 100%;">Submit</button>
+        </form>
+        <p style="text-align: center; margin-top: 1rem;">
+          <a href="#" onclick="toggleAuth(''); return false;" style="color: #667eea;">Back to Home</a>
+        </p>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content" id="features">
+      <!-- Backtest Form -->
+      <div class="card">
+        <h2>📊 Create Backtest</h2>
+        <div class="status-message" id="backtest-message"></div>
+        <form onsubmit="handleBacktest(event)">
+          <div class="form-group">
+            <label>Market Type</label>
+            <select id="market-type" required>
+              <option value="">Select market type</option>
+              <option value="forex">Forex</option>
+              <option value="crypto">Cryptocurrency</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Symbol</label>
+            <select id="symbol" required>
+              <option value="">Select symbol</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Strategy Name</label>
+            <input type="text" id="strategy-name" placeholder="e.g., RSI Strategy" required>
+          </div>
+          <div class="form-group">
+            <label>Timeframe</label>
+            <select id="timeframe" required>
+              <option value="">Select timeframe</option>
+              <option value="1m">1 Minute</option>
+              <option value="5m">5 Minutes</option>
+              <option value="15m">15 Minutes</option>
+              <option value="1h">1 Hour</option>
+              <option value="4h">4 Hours</option>
+              <option value="1d">1 Day</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Entry Price</label>
+            <input type="number" id="entry-price" step="0.01" placeholder="0.00" required>
+          </div>
+          <div class="form-group">
+            <label>Exit Price</label>
+            <input type="number" id="exit-price" step="0.01" placeholder="0.00" required>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width: 100%;">Run Backtest</button>
+        </form>
+      </div>
+
+      <!-- Market Data & Charts -->
+      <div class="card">
+        <h2>📈 Market Data</h2>
+        <div id="market-data" style="margin-top: 1rem;">
+          <p>Select a symbol to view market data</p>
+        </div>
+        <div id="chart">Chart visualization will appear here</div>
+      </div>
+    </div>
+
+    <!-- Backtest Results -->
+    <div class="card" style="margin-bottom: 2rem;">
+      <h2>📋 Backtest Results</h2>
+      <table class="results-table">
+        <thead>
+          <tr>
+            <th>Strategy</th>
+            <th>Symbol</th>
+            <th>Timeframe</th>
+            <th>Entry Price</th>
+            <th>Exit Price</th>
+            <th>Profit/Loss</th>
+            <th>Win Rate</th>
+          </tr>
+        </thead>
+        <tbody id="results-tbody">
+          <tr>
+            <td colspan="7" style="text-align: center; color: #999;">No backtests yet. Create one to get started!</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pricing Section -->
+    <div id="pricing" style="margin-bottom: 2rem;">
+      <h2 style="text-align: center; font-size: 2rem; color: white; margin-bottom: 2rem;">💳 Choose Your Plan</h2>
+      <div class="pricing-section">
+        <!-- Free Plan -->
+        <div class="pricing-card">
+          <h3>Free</h3>
+          <div class="price">₹0<span>/month</span></div>
+          <ul class="features">
+            <li>5 backtests/month</li>
+            <li>4 chart timeframes</li>
+            <li>3 strategy templates</li>
+            <li>Basic support</li>
+            <li>Community access</li>
+          </ul>
+          <button class="btn btn-secondary" style="width: 100%; margin-top: 1rem;">Current Plan</button>
+        </div>
+
+        <!-- Pro Plan -->
+        <div class="pricing-card pro">
+          <h3>🌟 Pro</h3>
+          <div class="price">₹399<span>/month</span></div>
+          <ul class="features">
+            <li>100 backtests/month</li>
+            <li>12 chart timeframes</li>
+            <li>15 strategy templates</li>
+            <li>Advanced analytics</li>
+            <li>API access</li>
+            <li>Email support</li>
+          </ul>
+          <button class="btn btn-primary" style="width: 100%; margin-top: 1rem;" onclick="handleSubscription('pro')">Upgrade to Pro</button>
+        </div>
+
+        <!-- Aura Plan -->
+        <div class="pricing-card">
+          <h3>✨ Aura</h3>
+          <div class="price">₹799<span>/month</span></div>
+          <ul class="features">
+            <li>Unlimited backtests</li>
+            <li>All chart timeframes</li>
+            <li>Unlimited strategies</li>
+            <li>Premium analytics</li>
+            <li>Full API access</li>
+            <li>Priority support</li>
+            <li>Custom indicators</li>
+          </ul>
+          <button class="btn btn-primary" style="width: 100%; margin-top: 1rem;" onclick="handleSubscription('aura')">Upgrade to Aura</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <p>&copy; 2024 TradeAura. All rights reserved. | Advanced Backtesting Platform for Traders</p>
+      <p style="margin-top: 1rem; font-size: 0.9rem;">Built with ❤️ for traders worldwide</p>
+    </footer>
+  </div>
+
+  <script>
+    const API_URL = 'http://localhost:5000';
+    let currentUser = null;
+    let marketSymbols = { crypto: [], forex: [] };
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      loadMarketSymbols();
+      document.getElementById('market-type').addEventListener('change', updateSymbols);
+    });
+
+    // Load Market Symbols
+    async function loadMarketSymbols() {
+      try {
+        const response = await fetch(`${API_URL}/api/market/symbols`);
+        const data = await response.json();
+        marketSymbols = data;
+        updateSymbols();
+      } catch (error) {
+        console.error('Error loading symbols:', error);
+      }
+    }
+
+    // Update Symbol Dropdown
+    function updateSymbols() {
+      const marketType = document.getElementById('market-type').value;
+      const symbolSelect = document.getElementById('symbol');
+      const symbols = marketSymbols[marketType] || [];
+      
+      symbolSelect.innerHTML = '<option value="">Select symbol</option>';
+      symbols.forEach(symbol => {
+        const option = document.createElement('option');
+        option.value = symbol;
+        option.textContent = symbol;
+        symbolSelect.appendChild(option);
+      });
+    }
+
+    // Toggle Auth Form
+    function toggleAuth(type) {
+      const authSection = document.getElementById('auth-section');
+      const authTitle = document.getElementById('auth-title');
+      const usernameField = document.getElementById('username-field');
+      
+      if (type === '') {
+        authSection.style.display = 'none';
+      } else if (type === 'login') {
+        authSection.style.display = 'block';
+        authTitle.textContent = 'Login to TradeAura';
+        usernameField.style.display = 'none';
+      } else if (type === 'register') {
+        authSection.style.display = 'block';
+        authTitle.textContent = 'Create Your Account';
+        usernameField.style.display = 'block';
+      }
+    }
+
+    // Handle Authentication
+    async function handleAuth(event) {
+      event.preventDefault();
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const username = document.getElementById('username').value;
+      const authTitle = document.getElementById('auth-title').textContent;
+      const endpoint = authTitle.includes('Login') ? 'login' : 'register';
+      
+      try {
+        const response = await fetch(`${API_URL}/api/auth/${endpoint}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email,
+            password,
+            username: endpoint === 'register' ? username : undefined
+          })
+        });
+        
+        const data = await response.json();
+        const message = document.getElementById('auth-message');
+        
+        if (response.ok) {
+          currentUser = data.user;
+          message.textContent = `✓ ${data.message}`;
+          message.className = 'status-message success';
+          setTimeout(() => {
+            toggleAuth('');
+            loadBacktests();
+          }, 1500);
+        } else {
+          message.textContent = `✗ ${data.error}`;
+          message.className = 'status-message error';
+        }
+      } catch (error) {
+        console.error('Auth error:', error);
+        document.getElementById('auth-message').textContent = '✗ Connection error';
+        document.getElementById('auth-message').className = 'status-message error';
+      }
+    }
+
+    // Handle Backtest
+    async function handleBacktest(event) {
+      event.preventDefault();
+      
+      const strategy_name = document.getElementById('strategy-name').value;
+      const market_type = document.getElementById('market-type').value;
+      const symbol = document.getElementById('symbol').value;
+      const timeframe = document.getElementById('timeframe').value;
+      const entry_price = parseFloat(document.getElementById('entry-price').value);
+      const exit_price = parseFloat(document.getElementById('exit-price').value);
+      
+      try {
+        const response = await fetch(`${API_URL}/api/backtest/create`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            strategy_name,
+            market_type,
+            symbol,
+            timeframe,
+            entry_price,
+            exit_price,
+            user_id: currentUser?.id || 1
+          })
+        });
+        
+        const data = await response.json();
+        const message = document.getElementById('backtest-message');
+        
+        if (response.ok) {
+          message.textContent = '✓ Backtest created successfully!';
+          message.className = 'status-message success';
+          event.target.reset();
+          loadBacktests();
+        } else {
+          message.textContent = `✗ ${data.error}`;
+          message.className = 'status-message error';
+        }
+      } catch (error) {
+        console.error('Backtest error:', error);
+        document.getElementById('backtest-message').textContent = '✗ Error creating backtest';
+        document.getElementById('backtest-message').className = 'status-message error';
+      }
+    }
+
+    // Load Backtests
+    async function loadBacktests() {
+      try {
+        const response = await fetch(`${API_URL}/api/backtest/list`);
+        const backtests = await response.json();
+        const tbody = document.getElementById('results-tbody');
+        
+        if (backtests.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #999;">No backtests yet</td></tr>';
+          return;
+        }
+        
+        tbody.innerHTML = backtests.map(bt => `
+          <tr>
+            <td>${bt.strategy_name}</td>
+            <td>${bt.symbol}</td>
+            <td>${bt.timeframe}</td>
+            <td>${bt.entry_price.toFixed(2)}</td>
+            <td>${bt.exit_price.toFixed(2)}</td>
+            <td class="${bt.profit_loss >= 0 ? 'positive' : 'negative'}">${bt.profit_loss >= 0 ? '+' : ''}${bt.profit_loss.toFixed(2)}</td>
+            <td>${bt.win_rate}%</td>
+          </tr>
+        `).join('');
+      } catch (error) {
+        console.error('Error loading backtests:', error);
+      }
+    }
+
+    // Handle Subscription
+    function handleSubscription(plan) {
+      if (!currentUser) {
+        alert('Please login first to upgrade your plan');
+        toggleAuth('login');
+        return;
+      }
+      alert(`Upgrading to ${plan.toUpperCase()} plan...\nRedirecting to payment gateway...`);
+    }
+
+    // Scroll Helper
+    function scrollTo(id) {
+      const element = document.getElementById(id);
+      element?.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Load initial data
+    loadBacktests();
+  </script>
+</body>
+</html>
