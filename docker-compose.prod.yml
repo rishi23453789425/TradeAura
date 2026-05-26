@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: tradeaura
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: tradeaura
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: always
+
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redis_data:/data
+    restart: always
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@postgres:5432/tradeaura
+      REDIS_URL: redis://redis:6379
+    depends_on:
+      - postgres
+      - redis
+    restart: always
+    expose:
+      - "5000"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
+    environment:
+      VITE_API_URL: ${BACKEND_URL}
+    depends_on:
+      - backend
+    restart: always
+    ports:
+      - "80:80"
+
+volumes:
+  postgres_data:
+  redis_data:
